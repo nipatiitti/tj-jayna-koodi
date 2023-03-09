@@ -4,7 +4,8 @@ import "@tensorflow/tfjs-backend-webgl"
 import { useEffect, useRef, useState } from "react"
 import { Loading } from "./Loading"
 
-const isUserMediaSupported = () => !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia)
+const isUserMediaSupported = () =>
+  !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) && document.documentElement.clientWidth > 640
 
 export const Demo = () => {
   const videoTag = useRef<HTMLVideoElement>(null)
@@ -45,7 +46,8 @@ export const Demo = () => {
       setModel(model)
     }
 
-    loadModel()
+    // Don't load on mobile
+    if (isUserMediaSupported()) loadModel()
   }, [])
 
   return isUserMediaSupported() ? (
@@ -56,7 +58,7 @@ export const Demo = () => {
       <div className="overflow-hidden rounded-lg bg-white shadow">
         <div className="px-4 py-5 sm:p-6 relative overflow-x-auto">
           <video autoPlay ref={videoTag} className="w-full h-auto min-w-min">
-            <source src="/video-placeholder.mp4" type="video/mp4" className="max-w-full" />
+            <source src="/video-placeholder.mp4" type="video/mp4" />
           </video>
           {predictions.map((prediction, index) => (
             <div
@@ -113,7 +115,7 @@ export const Demo = () => {
       <div className="px-4 py-5 sm:p-6">
         <h3 className="text-lg leading-6 font-medium text-gray-900">Demo ei ole tuettu tässä selaimessa</h3>
         <div className="mt-2 max-w-xl text-sm text-gray-500">
-          <p>Testaa demoa esimerkiksi Chrome-selaimella.</p>
+          <p>Valitettavasti tällä hetkellä demo ei tue mobiililaitteita.</p>
         </div>
       </div>
     </div>
